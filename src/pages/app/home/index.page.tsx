@@ -1,21 +1,21 @@
-import type { NextPage } from 'next'
 import * as S from './styles'
-import { Card } from './components/Card'
-import { Transactions } from './components/Transactions'
-import { Header } from '@/components/Header'
-import { BottomMenu } from '@/components/BottomMenu'
+import { ReactElement } from 'react'
+import { AppLayout } from '@/layouts/AppLayout'
+import { NextPageWithLayout } from '@/pages/_app.page'
 
-const Home: NextPage = () => {
+const Home: NextPageWithLayout = () => {
   return (
     <S.HomeContainer>
-      <Header isHome />
-
-      <Card />
-
-      <Transactions />
-
-      <BottomMenu isHome />
+      <div>teste</div>
     </S.HomeContainer>
+  )
+}
+
+Home.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <AppLayout>
+      {page}
+    </AppLayout>
   )
 }
 

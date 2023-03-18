@@ -1,22 +1,32 @@
 import { styled } from '@/styles'
 
 export const HeaderContainer = styled('div', {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  height: 60,
+  padding: '0 16px',
   display: 'flex',
-  justifyContent: 'space-between',
-  marginBottom: 32,
-
-  '> div': {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-  },
+  alignItems: 'center',
 })
 
-export const Circle = styled('div', {
-  width: 44,
-  height: 44,
-  background: '#373956',
-  border: '2px solid #3B3A5A',
-  borderRadius: 9999,
+export const ButtonContainer = styled('div', {
+  width: 40,
+  height: 40,
   padding: 8,
+  borderRadius: 9999,
+  cursor: 'pointer',
+
+  '&:hover': {
+    background: '$fa300'
+  },
+
+  '&:active': {
+    background: '$fa400'
+  },
+
+  button: {
+    all: 'unset',
+  }
 })

@@ -1,4 +1,3 @@
-import type { NextPage } from 'next'
 import * as S from './styles'
 import {
   CreditCard,
@@ -11,8 +10,11 @@ import {
 import Link from 'next/link'
 import { Header } from '@/components/Header'
 import { BottomMenu } from '@/components/BottomMenu'
+import { NextPageWithLayout } from '@/pages/_app.page'
+import { ReactElement } from 'react'
+import { AppLayout } from '@/layouts/AppLayout'
 
-const Config: NextPage = () => {
+const Config: NextPageWithLayout = () => {
   return (
     <S.ConfigContainer>
       <Header />
@@ -62,6 +64,14 @@ const Config: NextPage = () => {
 
       <BottomMenu />
     </S.ConfigContainer>
+  )
+}
+
+Config.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <AppLayout>
+      {page}
+    </AppLayout>
   )
 }
 
