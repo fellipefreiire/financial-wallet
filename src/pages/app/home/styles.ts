@@ -1,5 +1,44 @@
 import { styled } from '@/styles'
 
 export const HomeContainer = styled('div', {
+  height: '100%',
+  display: 'flex',
+  gap: 16,
+})
 
+export const CardsWrapper = styled('div', {
+  display: 'flex',
+  gap: 16,
+  flex: 1,
+})
+
+export const Container = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 16,
+
+  variants: {
+    side: {
+      left: {
+        flex: 3,
+      },
+      right: {
+        flex: 2,
+      }
+    }
+  }
+})
+
+const SideContainers = styled('div', {
+  background: '$fa300',
+  borderRadius: 20,
+  padding: 16,
+})
+
+export const RightContainer = styled(SideContainers, {
+  flex: 1,
+})
+
+export const LeftContainer = styled(SideContainers, {
+  flex: 2,
 })

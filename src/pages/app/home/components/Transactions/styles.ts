@@ -1,6 +1,7 @@
 import { styled } from '@/styles'
 
-export const TransactionsContainer = styled('main', {})
+export const TransactionsContainer = styled('div', {
+})
 
 export const TransactionsHeader = styled('div', {
   display: 'flex',

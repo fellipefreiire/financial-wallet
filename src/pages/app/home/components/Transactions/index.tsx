@@ -48,7 +48,7 @@ export const TransactionsComponent = () => {
           const purchaseMethod =
             transaction.transactionMethod.label === 'Dinheiro'
               ? transaction.transactionMethod.label
-              : `${transaction.transactionMethod.label} - ${transaction.transactionMethod.type}`
+              : `${transaction.transactionMethod.label} - ${transaction.transactionMethod.lastDigits}`
           const value = formatter.format(transaction.value)
           const entryValue =
             transaction.category.type === 'Entrada' ? value : `- ${value}`
