@@ -13,15 +13,9 @@ export function getWeekDates({ currentDate, left = false, right = false }: GetWe
     currentDate = currentDate.add(7, 'day')
   }
 
-  const reversedWeekDayIndex = [6, 5, 4, 3, 2, 1, 0]
-
   const initialDate = dayjs().set('date', currentDate.get('date') - currentDate.get('day')).set('month', currentDate.get('month')).set('year', currentDate.get('year'))
+  const finalDate = initialDate.add(6, 'day')
 
-  let finalDate = dayjs().set('date', currentDate.get('date') + reversedWeekDayIndex[currentDate.get('day')]).set('month', currentDate.get('month')).set('year', currentDate.get('year'))
-
-  console.log(currentDate.format('D[/]M[/]YYYY'))
-  console.log(initialDate.format('D[/]M[/]YYYY'))
-  console.log(finalDate.format('D[/]M[/]YYYY'))
 
   return {
     currentDate,

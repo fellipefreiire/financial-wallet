@@ -2,7 +2,7 @@ import { styled } from "@/styles";
 
 export const LayoutContainer = styled('main', {
   marginTop: 60,
-  padding: '12px 20px',
+  padding: '0 20px 12px',
   height: 'calc(100vh - 60px)',
 
   variants: {

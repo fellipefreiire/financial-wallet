@@ -23,11 +23,9 @@ interface HomeProps {
 const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions }) => {
   const [currentWeek, setCurrentWeek] = useState(() => {
     const currentDate = dayjs(new Date())
-    const reversedWeekDayIndex = [6, 5, 4, 3, 2, 1, 0]
 
     const initialDate = dayjs().set('date', currentDate.get('date') - currentDate.get('day'))
-
-    const finalDate = dayjs().set('date', currentDate.get('date') + reversedWeekDayIndex[currentDate.get('day')])
+    const finalDate = initialDate.add(6, 'day')
 
     return {
       currentDate,
