@@ -1,5 +1,5 @@
 import * as S from './styles'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { AppLayout } from '@/layouts/AppLayout'
 import { NextPageWithLayout } from '@/pages/_app.page'
 import { Card } from './components/Card'
@@ -10,6 +10,8 @@ import { Transactions } from './components/Transactions'
 import { LineChart } from './components/LineChart'
 import dayjs from 'dayjs'
 import { getWeekDates } from '@/utils/getWeekDates'
+import { getMinDateFromTransactions } from '@/utils/getMinDateFromTransactions'
+import { getTeste } from '@/utils/get'
 
 interface HomeProps {
   transactionsValues: {
@@ -22,31 +24,37 @@ interface HomeProps {
 
 const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions }) => {
   const [currentWeek, setCurrentWeek] = useState(() => {
-    const currentDate = dayjs(new Date())
+    const currentWeekDate = dayjs(new Date())
 
-    const initialDate = dayjs().set('date', currentDate.get('date') - currentDate.get('day'))
+    const initialDate = dayjs().set('date', currentWeekDate.get('date') - currentWeekDate.get('day'))
     const finalDate = initialDate.add(6, 'day')
 
     return {
-      currentDate,
+      currentWeekDate,
       initialDate,
       finalDate,
     }
   })
+
   const balance = formatCurrency(transactionsValues.balance)
   const income = formatCurrency(transactionsValues.income)
   const outcome = formatCurrency(transactionsValues.outcome)
 
+  const minDateFromTransactions = getMinDateFromTransactions(transactions)
+
+  const filtered = getTeste({ transactions, currentWeek })
+
+  console.log(filtered)
+
   function handleLeft() {
-    const week = getWeekDates({ currentDate: currentWeek.currentDate, left: true })
-    setCurrentWeek(week)
+    const week = getWeekDates({ minDate: minDateFromTransactions, currentWeekDate: currentWeek.currentWeekDate, left: true })
+    if (week) setCurrentWeek(week)
   }
 
   function handleRight() {
-    const week = getWeekDates({ currentDate: currentWeek.currentDate, right: true })
-    setCurrentWeek(week)
+    const week = getWeekDates({ minDate: minDateFromTransactions, currentWeekDate: currentWeek.currentWeekDate, right: true })
+    if (week) setCurrentWeek(week)
   }
-
 
   return (
     <S.HomeContainer>
@@ -67,7 +75,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions 
               <button onClick={() => handleRight()}>Right</button>
             </div>
           </div>
-          <LineChart transactions={transactions} />
+          <LineChart transactions={filtered} />
         </S.LeftContainer>
         <S.LeftContainer>
           <Transactions />

@@ -1,24 +1,32 @@
 import dayjs from 'dayjs'
 
 interface GetWeekDatesParams {
-  currentDate: dayjs.Dayjs
+  minDate: dayjs.Dayjs
+  currentWeekDate: dayjs.Dayjs
   left?: boolean
   right?: boolean
 }
 
-export function getWeekDates({ currentDate, left = false, right = false }: GetWeekDatesParams) {
+export function getWeekDates({ minDate, currentWeekDate, left = false, right = false }: GetWeekDatesParams) {
   if (left) {
-    currentDate = currentDate.subtract(7, 'day')
+    currentWeekDate = currentWeekDate.subtract(7, 'day')
   } else if (right) {
-    currentDate = currentDate.add(7, 'day')
+    currentWeekDate = currentWeekDate.add(7, 'day')
   }
 
-  const initialDate = dayjs().set('date', currentDate.get('date') - currentDate.get('day')).set('month', currentDate.get('month')).set('year', currentDate.get('year'))
+  const currentDate = dayjs()
+
+  const initialDate = dayjs().set('date', currentWeekDate.get('date') - currentWeekDate.get('day')).set('month', currentWeekDate.get('month')).set('year', currentWeekDate.get('year'))
+
   const finalDate = initialDate.add(6, 'day')
 
+  if (
+    finalDate.valueOf() < minDate.valueOf() ||
+    initialDate.valueOf() > currentDate.valueOf()
+  ) return
 
   return {
-    currentDate,
+    currentWeekDate,
     initialDate,
     finalDate,
   }
