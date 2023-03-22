@@ -1,5 +1,5 @@
 import * as S from './styles'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { AppLayout } from '@/layouts/AppLayout'
 import { NextPageWithLayout } from '@/pages/_app.page'
 import { Card } from './components/Card'
@@ -44,8 +44,6 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions 
 
   const filtered = getTeste({ transactions, currentWeek })
 
-  console.log(filtered)
-
   function handleLeft() {
     const week = getWeekDates({ minDate: minDateFromTransactions, currentWeekDate: currentWeek.currentWeekDate, left: true })
     if (week) setCurrentWeek(week)
@@ -55,6 +53,14 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions 
     const week = getWeekDates({ minDate: minDateFromTransactions, currentWeekDate: currentWeek.currentWeekDate, right: true })
     if (week) setCurrentWeek(week)
   }
+
+  const weekDays = Array.from({ length: 7 }).map((_, i) => {
+    if (i === 0) {
+      return currentWeek.initialDate
+    }
+
+    return currentWeek.initialDate.add(i, 'day')
+  })
 
   return (
     <S.HomeContainer>
@@ -75,7 +81,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions 
               <button onClick={() => handleRight()}>Right</button>
             </div>
           </div>
-          <LineChart transactions={filtered} />
+          <LineChart transactions={filtered} weekDays={weekDays} />
         </S.LeftContainer>
         <S.LeftContainer>
           <Transactions />

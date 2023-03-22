@@ -2,6 +2,7 @@ import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, To
 import { Line } from 'react-chartjs-2'
 import dayjs from 'dayjs'
 import { getWeekDays } from '@/utils/getWeekDays'
+import { formatCurrency } from '@/utils/formatCurrency'
 
 Chart.register(
   CategoryScale,
@@ -15,18 +16,18 @@ Chart.register(
 )
 
 interface LineChartProps {
-  transactions: {
-    data: number[]
-  }
+  transactions: number[]
+  weekDays: dayjs.Dayjs[]
 }
 
-export function LineChart({ transactions }: LineChartProps) {
-  // const dat = [1000, 850, 3000, 2300, 5000, 500, 600]
+export function LineChart({ transactions, weekDays }: LineChartProps) {
+  const weekDaysLabels = getWeekDays()
+
   const data: ChartData<'line'> = {
-    labels: getWeekDays(),
+    labels: weekDaysLabels,
     datasets: [
       {
-        data: transactions.data,
+        data: transactions,
         //TODO - REMOVE TS IGNORE
         //@ts-ignore
         fill: function (context) {
@@ -54,6 +55,8 @@ export function LineChart({ transactions }: LineChartProps) {
   }
 
   const options: ChartOptions<'line'> = {
+    responsive: true,
+    maintainAspectRatio: true,
     plugins: {
       legend: {
         display: false,
@@ -61,10 +64,43 @@ export function LineChart({ transactions }: LineChartProps) {
       filler: {
         drawTime: 'beforeDatasetDraw',
         propagate: true
+      },
+      tooltip: {
+        caretSize: 0,
+        caretPadding: 16,
+        backgroundColor: 'black',
+        yAlign: 'bottom',
+        xAlign: 'right',
+        padding: 16,
+        displayColors: false,
+        titleAlign: 'left',
+        cornerRadius: 0,
+        bodySpacing: 8,
+        bodyFont: {
+          size: 16,
+        },
+        titleFont: {
+          size: 24,
+        },
+        callbacks: {
+          label: function (this, tooltipItems) {
+            const currentDayIndex = weekDaysLabels.indexOf(tooltipItems.label)
+            const currentDate = weekDays[currentDayIndex]
+
+            return currentDate.format('dddd[ ]D[ ]MMMM')
+          },
+          title: function (this, tooltipItems) {
+            const data = tooltipItems[0].formattedValue.replace(/,/g, '.')
+
+            if (Number(data) % 1 === 0) {
+              return formatCurrency(Number(data), true)
+            }
+
+            return formatCurrency(Number(data))
+          },
+        }
       }
     },
-    responsive: true,
-    maintainAspectRatio: true,
     elements: {
       line: {
         borderWidth: 4,
@@ -74,7 +110,7 @@ export function LineChart({ transactions }: LineChartProps) {
         borderCapStyle: 'round',
       },
       point: {
-        radius: transactions.data.length > 1 ? 0 : 4,
+        radius: transactions.length > 1 ? 0 : 4,
         hitRadius: 12,
         backgroundColor: 'green',
         hoverBorderColor: 'green',
@@ -97,12 +133,35 @@ export function LineChart({ transactions }: LineChartProps) {
         },
         ticks: {
           padding: 0,
+          color: '#8F8FAB',
         },
         offset: true,
       },
       y: {
+        type: 'linear',
         min: 0,
-        max: transactions.data.length > 0 ? transactions.data.reduce((a, b) => Math.max(a, b)) + 100 : 100,
+        max: function (): number {
+          //TODO MAKE A FUNCTION TO GET DECIMAL PLACES
+          const mValue = 9000
+          const maxValue = transactions.reduce((a, b) => Math.max(a, b))
+          const decimalPlaces = Math.floor(Math.log10(mValue)) + 1
+
+          if (decimalPlaces === 3) return Math.floor(mValue / 100) * 100 + 100
+
+          if (decimalPlaces === 4) return Math.floor(mValue / 1000) * 1000 + 1000
+
+          if (decimalPlaces === 5) return Math.floor(mValue / 10000) * 10000 + 10000
+
+          if (decimalPlaces === 6) return Math.floor(mValue / 100000) * 100000 + 100000
+
+          if (decimalPlaces === 7) return Math.floor(mValue / 1000000) * 1000000 + 1000000
+
+          if (decimalPlaces === 8) return Math.floor(mValue / 10000000) * 10000000 + 10000000
+
+          if (decimalPlaces === 9) return Math.floor(mValue / 100000000) * 100000000 + 100000000
+
+          return 100
+        }(),
         offset: true,
         bounds: 'ticks',
         grid: {
@@ -117,10 +176,14 @@ export function LineChart({ transactions }: LineChartProps) {
               return (Number(value) / 1000).toFixed(0) + 'K';
             } else if (Number(value) > 1000000) {
               return (Number(value) / 1000000).toFixed(0) + 'M';
+            } else if (Number(value) > 1000000000) {
+              return (Number(value) / 1000000000).toFixed(0) + 'B';
             } else if (Number(value) < 900) {
               return Number(value);
             }
           },
+          color: '#8F8FAB',
+          stepSize: 3000,
         }
       }
     }

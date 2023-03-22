@@ -9,10 +9,6 @@ interface Get {
   transactions: Transaction[]
 }
 
-type Teste = {
-  data: number[]
-}
-
 export function getTeste({ transactions, currentWeek }: Get) {
   const outcomes = transactions.filter((transaction) => transaction.category.type === 'Saída')
 
@@ -28,16 +24,20 @@ export function getTeste({ transactions, currentWeek }: Get) {
     return acc
   }, [])
 
-  const trans = filter.filter((transaction) => {
-    return dayjs(transaction.date).valueOf() > currentWeek.initialDate.valueOf() && dayjs(transaction.date).valueOf() < currentWeek.finalDate.valueOf()
-  })
 
-  const tt = trans.reduce<Teste>((acc, curr) => {
-    acc.data.push(curr.value!)
+  const ta = Array.from({ length: 7 }).reduce<number[]>((acc, _, i) => {
+    const currentDay = currentWeek.initialDate.add(i, 'day')
+
+    if (filter.some((a) => dayjs(a.date).isSame(currentDay, 'date'))) {
+      if (filter[i]) {
+        acc.push(filter[i].value!)
+      }
+    } else {
+      acc.push(0)
+    }
 
     return acc
-  }, {
-    data: []
-  })
-  return tt
+  }, [])
+
+  return ta
 }
