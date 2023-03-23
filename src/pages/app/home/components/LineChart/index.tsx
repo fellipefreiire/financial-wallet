@@ -7,6 +7,8 @@ import { formatCurrency } from '@/utils/formatCurrency'
 import { getWeekDays } from '@/utils/getWeekDays'
 import { getStepSizeAndMaxValue } from '@/utils/getStepSizeAndMaxValue'
 
+import * as S from './styles'
+
 Chart.register(
   CategoryScale,
   LinearScale,
@@ -25,8 +27,9 @@ interface LineChartProps {
 
 export function LineChart({ transactions, weekDays }: LineChartProps) {
   const weekDaysLabels = getWeekDays()
-  const maxValue = transactions.reduce((a, b) => Math.max(a, b))
-  const stepSizeAndMaxValue = getStepSizeAndMaxValue(maxValue)
+  const maxTransactionValue = transactions.reduce((a, b) => Math.max(a, b))
+  const totalSpent = transactions.reduce((a, b) => a + b)
+  const stepSizeAndMaxValue = getStepSizeAndMaxValue(maxTransactionValue)
 
   const data: ChartData<'line'> = {
     labels: weekDaysLabels,
@@ -65,6 +68,19 @@ export function LineChart({ transactions, weekDays }: LineChartProps) {
     plugins: {
       legend: {
         display: false,
+      },
+      title: {
+        display: true,
+        text: totalSpent % 1 === 0 ? formatCurrency(totalSpent, true) : formatCurrency(totalSpent),
+        align: 'start',
+        color: 'white',
+        font: {
+          size: 24,
+          family: 'Roboto',
+        },
+        padding: {
+          bottom: 4,
+        }
       },
       filler: {
         drawTime: 'beforeDatasetDraw',
@@ -139,6 +155,10 @@ export function LineChart({ transactions, weekDays }: LineChartProps) {
         ticks: {
           padding: 0,
           color: '#8F8FAB',
+          font: {
+            size: 16,
+            family: 'Roboto',
+          }
         },
         offset: true,
       },
@@ -170,14 +190,19 @@ export function LineChart({ transactions, weekDays }: LineChartProps) {
             }
           },
           color: '#8F8FAB',
-          stepSize: stepSizeAndMaxValue.stepSize
+          stepSize: stepSizeAndMaxValue.stepSize,
+          font: {
+            size: 16,
+            family: 'Roboto',
+          }
         }
       }
     }
   }
+
   return (
-    <div>
+    <S.ChartContainer>
       <Line data={data} options={options} />
-    </div>
+    </S.ChartContainer>
   )
 }

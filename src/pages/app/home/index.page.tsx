@@ -1,17 +1,21 @@
-import * as S from './styles'
 import { ReactElement, useState } from 'react'
-import { AppLayout } from '@/layouts/AppLayout'
-import { NextPageWithLayout } from '@/pages/_app.page'
-import { Card } from './components/Card'
 import { GetServerSideProps } from 'next'
+import { NextPageWithLayout } from '@/pages/_app.page'
+import { AppLayout } from '@/layouts/AppLayout'
 import { api } from '@/lib/axios'
-import { formatCurrency } from '@/utils/formatCurrency'
-import { Transactions } from './components/Transactions'
-import { LineChart } from './components/LineChart'
 import dayjs from 'dayjs'
-import { getWeekDates } from '@/utils/getWeekDates'
+
+import { Card } from './components/Card'
+import { LineChart } from './components/LineChart'
+import { Transactions } from './components/Transactions'
+
+import { formatCurrency } from '@/utils/formatCurrency'
 import { getMinDateFromTransactions } from '@/utils/getMinDateFromTransactions'
+import { getWeekDates } from '@/utils/getWeekDates'
 import { getTeste } from '@/utils/get'
+
+import { CaretLeft, CaretRight } from 'phosphor-react'
+import * as S from './styles'
 
 interface HomeProps {
   transactionsValues: {
@@ -62,6 +66,8 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions 
     return currentWeek.initialDate.add(i, 'day')
   })
 
+  const isSameYear = currentWeek.initialDate.get('year') === currentWeek.finalDate.get('year')
+
   return (
     <S.HomeContainer>
       <S.Container side="left">
@@ -71,16 +77,22 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions 
           <Card type='outcome' value={outcome} />
         </S.CardsWrapper>
         <S.LeftContainer>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', gap: 20 }}>
-              <span>{currentWeek.initialDate.format('D[/]M[/]YYYY')}</span>
-              <span>{currentWeek.finalDate.format('D[/]M[/]YYYY')}</span>
-            </div>
-            <div style={{ display: 'flex', gap: 20 }}>
-              <button onClick={() => handleLeft()}>Left</button>
-              <button onClick={() => handleRight()}>Right</button>
-            </div>
-          </div>
+          <S.GraphController>
+            <S.Title>Spend Analysis</S.Title>
+            <S.GraphControllerContainer>
+              <button onClick={() => handleLeft()}>
+                <CaretLeft size={20} weight='bold' />
+              </button>
+              <S.GraphControllerDates>
+                <span>{currentWeek.initialDate.format(`DD MMM${isSameYear ? '' : ' YYYY'}`)}</span>
+                <div />
+                <span>{currentWeek.finalDate.format('DD MMM YYYY')}</span>
+              </S.GraphControllerDates>
+              <button onClick={() => handleRight()}>
+                <CaretRight size={20} weight='bold' />
+              </button>
+            </S.GraphControllerContainer>
+          </S.GraphController>
           <LineChart transactions={filtered} weekDays={weekDays} />
         </S.LeftContainer>
         <S.LeftContainer>

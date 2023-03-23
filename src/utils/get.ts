@@ -9,6 +9,7 @@ interface Get {
   transactions: Transaction[]
 }
 
+//TODO FIX NAMES
 export function getTeste({ transactions, currentWeek }: Get) {
   const outcomes = transactions.filter((transaction) => transaction.category.type === 'Saída')
 
@@ -29,9 +30,8 @@ export function getTeste({ transactions, currentWeek }: Get) {
     const currentDay = currentWeek.initialDate.add(i, 'day')
 
     if (filter.some((a) => dayjs(a.date).isSame(currentDay, 'date'))) {
-      if (filter[i]) {
-        acc.push(filter[i].value!)
-      }
+      const c = filter.find((b) => dayjs(b.date).isSame(currentDay, 'date'))
+      acc.push(c?.value!)
     } else {
       acc.push(0)
     }

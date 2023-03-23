@@ -7,7 +7,7 @@ interface GetWeekDatesParams {
   right?: boolean
 }
 
-const reversedWeekDayIndexes = [6, 5, 4, 3, 2, 1, 0]
+const weekDayIndexes = [0, 1, 2, 3, 4, 5, 6]
 
 export function getWeekDates({ minDate, currentWeekDate, left = false, right = false }: GetWeekDatesParams) {
   if (left) {
@@ -18,7 +18,7 @@ export function getWeekDates({ minDate, currentWeekDate, left = false, right = f
 
   const currentDate = dayjs()
 
-  const initialDate = currentWeekDate.subtract(reversedWeekDayIndexes[currentWeekDate.get('day')], 'day')
+  const initialDate = currentWeekDate.subtract(weekDayIndexes[currentWeekDate.get('day')], 'day')
 
   const finalDate = initialDate.add(6, 'day')
 
