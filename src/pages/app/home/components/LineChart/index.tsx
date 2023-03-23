@@ -1,8 +1,11 @@
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler, ChartOptions, ChartData } from 'chart.js'
-import { Line } from 'react-chartjs-2'
 import dayjs from 'dayjs'
-import { getWeekDays } from '@/utils/getWeekDays'
+import { Line } from 'react-chartjs-2'
+
+import { B, K, M, T } from '@/utils/constants'
 import { formatCurrency } from '@/utils/formatCurrency'
+import { getWeekDays } from '@/utils/getWeekDays'
+import { getStepSizeAndMaxValue } from '@/utils/getStepSizeAndMaxValue'
 
 Chart.register(
   CategoryScale,
@@ -22,6 +25,8 @@ interface LineChartProps {
 
 export function LineChart({ transactions, weekDays }: LineChartProps) {
   const weekDaysLabels = getWeekDays()
+  const maxValue = transactions.reduce((a, b) => Math.max(a, b))
+  const stepSizeAndMaxValue = getStepSizeAndMaxValue(maxValue)
 
   const data: ChartData<'line'> = {
     labels: weekDaysLabels,
@@ -29,7 +34,7 @@ export function LineChart({ transactions, weekDays }: LineChartProps) {
       {
         data: transactions,
         //TODO - REMOVE TS IGNORE
-        //@ts-ignore
+        // @ts-ignore
         fill: function (context) {
           const chart = context.chart
           const { ctx, chartArea } = chart
@@ -140,28 +145,7 @@ export function LineChart({ transactions, weekDays }: LineChartProps) {
       y: {
         type: 'linear',
         min: 0,
-        max: function (): number {
-          //TODO MAKE A FUNCTION TO GET DECIMAL PLACES
-          const mValue = 9000
-          const maxValue = transactions.reduce((a, b) => Math.max(a, b))
-          const decimalPlaces = Math.floor(Math.log10(mValue)) + 1
-
-          if (decimalPlaces === 3) return Math.floor(mValue / 100) * 100 + 100
-
-          if (decimalPlaces === 4) return Math.floor(mValue / 1000) * 1000 + 1000
-
-          if (decimalPlaces === 5) return Math.floor(mValue / 10000) * 10000 + 10000
-
-          if (decimalPlaces === 6) return Math.floor(mValue / 100000) * 100000 + 100000
-
-          if (decimalPlaces === 7) return Math.floor(mValue / 1000000) * 1000000 + 1000000
-
-          if (decimalPlaces === 8) return Math.floor(mValue / 10000000) * 10000000 + 10000000
-
-          if (decimalPlaces === 9) return Math.floor(mValue / 100000000) * 100000000 + 100000000
-
-          return 100
-        }(),
+        max: stepSizeAndMaxValue.maxValue,
         offset: true,
         bounds: 'ticks',
         grid: {
@@ -172,18 +156,21 @@ export function LineChart({ transactions, weekDays }: LineChartProps) {
         },
         ticks: {
           callback: function (value) {
-            if (Number(value) > 999 && Number(value) < 1000000) {
-              return (Number(value) / 1000).toFixed(0) + 'K';
-            } else if (Number(value) > 1000000) {
-              return (Number(value) / 1000000).toFixed(0) + 'M';
-            } else if (Number(value) > 1000000000) {
-              return (Number(value) / 1000000000).toFixed(0) + 'B';
-            } else if (Number(value) < 900) {
-              return Number(value);
+            switch (true) {
+              case (Number(value) >= T):
+                return (Number(value) / T).toFixed(0) + 'T'
+              case (Number(value) >= B):
+                return (Number(value) / B).toFixed(0) + 'B'
+              case (Number(value) >= M):
+                return (Number(value) / M).toFixed(0) + 'M'
+              case (Number(value) >= K):
+                return (Number(value) / K).toFixed(0) + 'K'
+              default:
+                return (Number(value))
             }
           },
           color: '#8F8FAB',
-          stepSize: 3000,
+          stepSize: stepSizeAndMaxValue.stepSize
         }
       }
     }
