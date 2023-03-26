@@ -16,6 +16,7 @@ import { getTeste } from '@/utils/get'
 
 import { CaretLeft, CaretRight } from 'phosphor-react'
 import * as S from './styles'
+import { TransactionMethods } from './components/TransactionMethods'
 
 interface HomeProps {
   transactionsValues: {
@@ -24,9 +25,10 @@ interface HomeProps {
     outcome: number
   }
   transactions: Transaction[]
+  transactionMethods: TransactionMethod[]
 }
 
-const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions }) => {
+const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions, transactionMethods }) => {
   const [currentWeek, setCurrentWeek] = useState(() => {
     const currentWeekDate = dayjs(new Date())
 
@@ -100,8 +102,9 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions 
         </S.LeftContainer>
       </S.Container>
       <S.Container side="right">
-        <S.RightContainer />
-        <S.RightContainer />
+        <S.RightContainer>
+          <TransactionMethods transactionMethods={transactionMethods} />
+        </S.RightContainer>
       </S.Container>
     </S.HomeContainer>
   )
@@ -116,12 +119,17 @@ Home.getLayout = function getLayout(page: ReactElement) {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const responses = await Promise.all([api.get('/transactionsValues'), api.get('/transactions')])
+  const responses = await Promise.all([
+    api.get('/transactionsValues'),
+    api.get('/transactions'),
+    api.get('/transactionMethods')
+  ])
 
   return {
     props: {
       transactionsValues: responses[0].data,
-      transactions: responses[1].data
+      transactions: responses[1].data,
+      transactionMethods: responses[2].data,
     }
   }
 }

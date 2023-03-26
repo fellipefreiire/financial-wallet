@@ -4,6 +4,7 @@ export const HomeContainer = styled('div', {
   height: '100%',
   display: 'flex',
   gap: 16,
+  flex: '0 1 auto'
 })
 
 export const CardsWrapper = styled('div', {
@@ -30,13 +31,14 @@ export const Container = styled('div', {
 })
 
 const SideContainers = styled('div', {
-  // background: '$fa300',
+  background: '$fa300',
   borderRadius: 20,
   padding: 16,
+  // minHeight: 350,
 })
 
 export const RightContainer = styled(SideContainers, {
-  flex: 1,
+  height: '100%',
 })
 
 export const LeftContainer = styled(SideContainers, {

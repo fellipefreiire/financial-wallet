@@ -1,3 +1,11 @@
+type TransactionMethod = {
+  id: number
+  label: string
+  lastDigits: string
+  type: string
+  active: boolean
+}
+
 type Transaction = {
   id: number
   value: number
@@ -11,11 +19,5 @@ type Transaction = {
     icon: string
     active: boolean
   }
-  transactionMethod: {
-    id: number
-    label: string
-    lastDigits: string
-    type: string
-    active: boolean
-  }
+  transactionMethod: TransactionMethod[]
 }

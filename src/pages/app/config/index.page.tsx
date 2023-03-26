@@ -28,7 +28,7 @@ const Config: NextPageWithLayout = () => {
             <span>Cartões</span>
           </S.Option>
         </Link>
-        <Link href="/app/config/categorias">
+        <Link href="/app/config/categories">
           <S.Option>
             <div>
               <Stack size={48} color="#6886D5" weight="light" />
