@@ -1,16 +1,15 @@
 import { styled } from '@/styles'
 
 export const HomeContainer = styled('div', {
-  height: '100%',
   display: 'flex',
   gap: 16,
-  flex: '0 1 auto'
+  flex: '0 1 auto',
+  width: '100%',
 })
 
 export const CardsWrapper = styled('div', {
   display: 'flex',
   gap: 16,
-  flex: 1,
 })
 
 export const Container = styled('div', {
@@ -31,7 +30,7 @@ export const Container = styled('div', {
 })
 
 const SideContainers = styled('div', {
-  background: '$fa300',
+  // background: '$fa300',
   borderRadius: 20,
   padding: 16,
   // minHeight: 350,

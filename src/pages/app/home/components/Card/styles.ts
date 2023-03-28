@@ -3,8 +3,9 @@ import { styled } from '@/styles'
 export const CardContainer = styled('div', {
   background: '$fa300',
   flex: 1,
-  borderRadius: 6,
+  // borderRadius: 6,
   padding: 16,
+  maxHeight: 120,
 })
 
 export const Teste2 = styled('div', {
