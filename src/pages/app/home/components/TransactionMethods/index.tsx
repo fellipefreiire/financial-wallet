@@ -1,39 +1,31 @@
 import { useState } from 'react'
 import { CreditCard } from '../CreditCard'
 import * as S from './styles'
+import { AddressBook } from 'phosphor-react'
+import { PieChart } from '../PieChart'
+import dayjs from 'dayjs'
 
 interface TransactionMethodsProps {
+  transactions: Transaction[]
   transactionMethods: TransactionMethod[]
 }
 
-const data = [
-  {
-    id: 1,
-    number: 5555,
-    position: 1,
-  },
-  {
-    id: 2,
-    number: 6666,
-    position: 2,
-  },
-  {
-    id: 3,
-    number: 7777,
-    position: 3,
-  },
-  {
-    id: 4,
-    number: 8888,
-    position: 4,
-  }
-]
+type Teste = {
+  labels: string[]
+  data: number[]
+}
 
-export function TransactionMethods({ transactionMethods }: TransactionMethodsProps) {
-  const [cards, setCards] = useState(data)
+export function TransactionMethods({ transactions, transactionMethods, }: TransactionMethodsProps) {
+  const [cards, setCards] = useState(transactionMethods.map((method, i) => {
+    return {
+      ...method,
+      position: i + 1
+    }
+  }))
+  const [selectedCard, setSelectedCard] = useState(cards.find((card) => card.position === 2))
 
   function handle(cardNumber: number) {
-    const card = cards.find((card) => card.number === cardNumber)
+    const card = cards.find((card) => Number(card.lastDigits) === cardNumber)
 
     if (card?.position === 2) return
 
@@ -51,6 +43,9 @@ export function TransactionMethods({ transactionMethods }: TransactionMethodsPro
       })
 
       setCards(newCards)
+      setSelectedCard(newCards.find((card) => card.position === 2))
+
+      return
     }
 
     if (card?.position === 3) {
@@ -65,8 +60,30 @@ export function TransactionMethods({ transactionMethods }: TransactionMethodsPro
       })
 
       setCards(newCards)
+      setSelectedCard(newCards.find((card) => card.position === 2))
     }
   }
+
+  const teste = transactions.filter((transaction) => transaction.transactionMethodId === selectedCard?.id && dayjs(transaction.date).isSame(dayjs('03/28/2023'), 'month'))
+
+  const teste2 = teste.reduce<Teste>((acc, curr) => {
+    if (acc.labels.some((label) => label === curr.category.label)) {
+      const a = acc.labels.findIndex((label) => label === curr.category.label)
+      acc.data[a] += curr.value
+    } else {
+      acc.labels.push(curr.category.label)
+      acc.data.push(curr.value)
+    }
+
+    return acc
+  }, {
+    labels: [],
+    data: [],
+  })
+
+
+
+  // console.log(teste)
 
   return (
     <S.TransactionMethodsContainer>
@@ -74,63 +91,43 @@ export function TransactionMethods({ transactionMethods }: TransactionMethodsPro
         {cards.map((card) => (
           <CreditCard
             key={card.id}
-            number={card.number}
+            number={Number(card.lastDigits)}
             cardPosition={card.position}
-            // isActive={card.isActive}
-            // isLeft={card.isLeft}
-            // isRight={card.isRight}
-            onClick={() => handle(card.number)}
+            onClick={() => handle(Number(card.lastDigits))}
           />
         ))}
-        {/* <CreditCard
-          number={6548}
-          isActive={false}
-          isLeft={true}
-          isRight={false}
-        />
-        <CreditCard
-          number={6666}
-          isActive={true}
-          isLeft={false}
-          isRight={false}
-        />
-        <CreditCard
-          number={7777}
-          isActive={false}
-          isLeft={false}
-          isRight={true}
-        />
-        <CreditCard
-          number={8888}
-          isActive={false}
-          isLeft={false}
-          isRight={false}
-        /> */}
-        {/* <CreditCard
-          number={5555}
-          isActive={false}
-          isLeft={false}
-          isRight={false}
-        />
-        <CreditCard
-          number={6666}
-          isActive={false}
-          isLeft={true}
-          isRight={false}
-        />
-        <CreditCard
-          number={7777}
-          isActive={true}
-          isLeft={false}
-          isRight={false}
-        />
-        <CreditCard
-          number={8888}
-          isActive={false}
-          isLeft={false}
-          isRight={true}
-        /> */}
       </S.Cards>
+      <S.CardDetailContainer>
+        <h2>Card details</h2>
+        <S.CardDetails>
+          <S.Row>
+            <S.IconWrapper>
+              <AddressBook size={24} />
+            </S.IconWrapper>
+            <S.InfoWrapper>
+              <span>Card No.</span>
+              <span>**** **** **** {selectedCard?.lastDigits}</span>
+            </S.InfoWrapper>
+          </S.Row>
+          <S.Row>
+            <S.IconWrapper>
+              <AddressBook size={24} />
+            </S.IconWrapper>
+            <S.InfoWrapper>
+              <span>Expiry date</span>
+              <span>08/27</span>
+            </S.InfoWrapper>
+          </S.Row>
+        </S.CardDetails>
+        <S.ButtonWrapper>
+          <button>Settings</button>
+          <button>Lock Card</button>
+        </S.ButtonWrapper>
+      </S.CardDetailContainer>
+      <div>
+        <span>March - 2023</span>
+        <PieChart data={teste2} />
+      </div>
     </S.TransactionMethodsContainer>
   )
 }

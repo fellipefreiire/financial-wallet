@@ -1,6 +1,6 @@
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler, ChartOptions, ChartData } from 'chart.js'
-import dayjs from 'dayjs'
 import { Line } from 'react-chartjs-2'
+import dayjs from 'dayjs'
 
 import { B, K, M, T } from '@/utils/constants'
 import { formatCurrency } from '@/utils/formatCurrency'

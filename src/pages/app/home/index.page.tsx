@@ -78,7 +78,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions,
           <Card type="income" value={income} />
           <Card type='outcome' value={outcome} />
         </S.CardsWrapper>
-        <S.LeftContainer>
+        <S.GraphContainer>
           <S.GraphController>
             <S.Title>Spend Analysis</S.Title>
             <S.GraphControllerContainer>
@@ -96,14 +96,14 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions,
             </S.GraphControllerContainer>
           </S.GraphController>
           <LineChart transactions={filtered} weekDays={weekDays} />
-        </S.LeftContainer>
+        </S.GraphContainer>
         <S.LeftContainer>
           <Transactions />
         </S.LeftContainer>
       </S.Container>
       <S.Container side="right">
         <S.RightContainer>
-          <TransactionMethods transactionMethods={transactionMethods} />
+          <TransactionMethods transactions={transactions} transactionMethods={transactionMethods} />
         </S.RightContainer>
       </S.Container>
     </S.HomeContainer>

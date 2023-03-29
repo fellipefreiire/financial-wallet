@@ -30,7 +30,7 @@ export const Container = styled('div', {
 })
 
 const SideContainers = styled('div', {
-  // background: '$fa300',
+  background: '$fa300',
   borderRadius: 20,
   padding: 16,
   // minHeight: 350,
@@ -42,6 +42,10 @@ export const RightContainer = styled(SideContainers, {
 
 export const LeftContainer = styled(SideContainers, {
   flex: 2,
+})
+
+export const GraphContainer = styled('div', {
+  flex: 3,
 })
 
 export const GraphController = styled('div', {
