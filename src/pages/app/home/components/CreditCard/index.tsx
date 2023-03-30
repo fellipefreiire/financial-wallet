@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import * as S from './styles'
 
 interface CreditCardProps extends React.HTMLProps<HTMLDivElement> {
@@ -28,7 +29,11 @@ export function CreditCard(props: CreditCardProps) {
   return (
     <S.CreditCardContainer onClick={props.onClick} data-position={props.cardPosition} data-position-gt={dataGt}>
       <div>
-        **** **** **** {props.number}
+        <Image src="/mastercard_logo.svg" width={80} height={80} alt="" />
+      </div>
+      <div>
+        <span>**** **** **** {props.number}</span>
+        <span>08/27</span>
       </div>
     </S.CreditCardContainer>
   )

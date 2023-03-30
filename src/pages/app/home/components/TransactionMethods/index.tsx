@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { CreditCard } from '../CreditCard'
 import * as S from './styles'
-import { AddressBook } from 'phosphor-react'
+import { Browser, Calendar, CaretLeft, CaretRight } from 'phosphor-react'
 import { PieChart } from '../PieChart'
 import dayjs from 'dayjs'
 
 interface TransactionMethodsProps {
   transactions: Transaction[]
   transactionMethods: TransactionMethod[]
+  minDateFromTransactions: dayjs.Dayjs
 }
 
 type Teste = {
@@ -15,7 +16,7 @@ type Teste = {
   data: number[]
 }
 
-export function TransactionMethods({ transactions, transactionMethods, }: TransactionMethodsProps) {
+export function TransactionMethods({ transactions, transactionMethods, minDateFromTransactions }: TransactionMethodsProps) {
   const [cards, setCards] = useState(transactionMethods.map((method, i) => {
     return {
       ...method,
@@ -23,6 +24,7 @@ export function TransactionMethods({ transactions, transactionMethods, }: Transa
     }
   }))
   const [selectedCard, setSelectedCard] = useState(cards.find((card) => card.position === 2))
+  const [currentDate, setCurrentDate] = useState(dayjs())
 
   function handle(cardNumber: number) {
     const card = cards.find((card) => Number(card.lastDigits) === cardNumber)
@@ -64,7 +66,7 @@ export function TransactionMethods({ transactions, transactionMethods, }: Transa
     }
   }
 
-  const teste = transactions.filter((transaction) => transaction.transactionMethodId === selectedCard?.id && dayjs(transaction.date).isSame(dayjs('03/28/2023'), 'month'))
+  const teste = transactions.filter((transaction) => transaction.transactionMethodId === selectedCard?.id && dayjs(transaction.date).isSame(currentDate, 'month'))
 
   const teste2 = teste.reduce<Teste>((acc, curr) => {
     if (acc.labels.some((label) => label === curr.category.label)) {
@@ -81,9 +83,15 @@ export function TransactionMethods({ transactions, transactionMethods, }: Transa
     data: [],
   })
 
+  function handleLeft() {
+    if (currentDate.subtract(1, 'month').get('month') < minDateFromTransactions.get('month')) return
+    setCurrentDate(currentDate.subtract(1, 'month'))
+  }
 
-
-  // console.log(teste)
+  function handleRight() {
+    if (currentDate.add(1, 'month').get('month') > dayjs().get('month')) return
+    setCurrentDate(currentDate.add(1, 'month'))
+  }
 
   return (
     <S.TransactionMethodsContainer>
@@ -102,7 +110,7 @@ export function TransactionMethods({ transactions, transactionMethods, }: Transa
         <S.CardDetails>
           <S.Row>
             <S.IconWrapper>
-              <AddressBook size={24} />
+              <Browser size={24} />
             </S.IconWrapper>
             <S.InfoWrapper>
               <span>Card No.</span>
@@ -111,7 +119,7 @@ export function TransactionMethods({ transactions, transactionMethods, }: Transa
           </S.Row>
           <S.Row>
             <S.IconWrapper>
-              <AddressBook size={24} />
+              <Calendar size={24} />
             </S.IconWrapper>
             <S.InfoWrapper>
               <span>Expiry date</span>
@@ -119,15 +127,23 @@ export function TransactionMethods({ transactions, transactionMethods, }: Transa
             </S.InfoWrapper>
           </S.Row>
         </S.CardDetails>
-        <S.ButtonWrapper>
+        {/* <S.ButtonWrapper>
           <button>Settings</button>
           <button>Lock Card</button>
-        </S.ButtonWrapper>
+        </S.ButtonWrapper> */}
       </S.CardDetailContainer>
-      <div>
-        <span>March - 2023</span>
+      <S.ChartContainer>
+        <S.ChartController>
+          <button onClick={handleLeft}>
+            <CaretLeft size={20} weight='bold' />
+          </button>
+          <span>{currentDate.format('MMMM - YYYY')}</span>
+          <button onClick={handleRight}>
+            <CaretRight size={20} weight='bold' />
+          </button>
+        </S.ChartController>
         <PieChart data={teste2} />
-      </div>
+      </S.ChartContainer>
     </S.TransactionMethodsContainer>
   )
 }

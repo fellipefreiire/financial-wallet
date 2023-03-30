@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useRef, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { NextPageWithLayout } from '@/pages/_app.page'
 import { AppLayout } from '@/layouts/AppLayout'
@@ -70,6 +70,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions,
 
   const isSameYear = currentWeek.initialDate.get('year') === currentWeek.finalDate.get('year')
 
+
   return (
     <S.HomeContainer>
       <S.Container side="left">
@@ -103,7 +104,11 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions,
       </S.Container>
       <S.Container side="right">
         <S.RightContainer>
-          <TransactionMethods transactions={transactions} transactionMethods={transactionMethods} />
+          <TransactionMethods
+            transactions={transactions}
+            transactionMethods={transactionMethods}
+            minDateFromTransactions={minDateFromTransactions}
+          />
         </S.RightContainer>
       </S.Container>
     </S.HomeContainer>

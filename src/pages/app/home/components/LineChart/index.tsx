@@ -63,8 +63,8 @@ export function LineChart({ transactions, weekDays }: LineChartProps) {
   }
 
   const options: ChartOptions<'line'> = {
-    responsive: true,
-    maintainAspectRatio: true,
+    responsive: false,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false,
@@ -140,9 +140,6 @@ export function LineChart({ transactions, weekDays }: LineChartProps) {
         hoverRadius: 8,
       },
     },
-    layout: {
-      autoPadding: true,
-    },
     scales: {
       x: {
         bounds: 'ticks',
@@ -196,8 +193,8 @@ export function LineChart({ transactions, weekDays }: LineChartProps) {
             family: 'Roboto',
           }
         }
-      }
-    }
+      },
+    },
   }
 
   return (

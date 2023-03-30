@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import * as Collapsible from '@radix-ui/react-collapsible'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import * as S from './styles'
 
@@ -10,15 +10,20 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [windowSize, setWindowSize] = useState(0)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(windowSize > 1440)
+
+  useEffect(() => {
+    setWindowSize(window.innerWidth)
+  }, [])
 
   return (
     <Collapsible.Root
-      defaultOpen
+      defaultOpen={windowSize > 1440}
       onOpenChange={setIsSidebarOpen}
     >
       <Header />
-      <Sidebar isSidebarOpen={isSidebarOpen} />
+      <Sidebar isSidebarOpen={isSidebarOpen} windowSize={windowSize} />
       <S.LayoutContainer isSidebarOpen={isSidebarOpen}>{children}</S.LayoutContainer>
     </Collapsible.Root >
   )
