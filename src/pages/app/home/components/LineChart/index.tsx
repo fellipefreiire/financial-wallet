@@ -63,7 +63,7 @@ export function LineChart({ transactions, weekDays }: LineChartProps) {
   }
 
   const options: ChartOptions<'line'> = {
-    responsive: false,
+    responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {

@@ -4,6 +4,7 @@ export const CreditCardContainer = styled('div', {
   width: '25vw', // 460 300
   height: '14.5625vw', // 240
   background: 'linear-gradient(177.23deg, #9C2CF3 -13.49%, #3A49F9 109.75%)',
+  // background: 'linear-gradient(167.6deg, #E42C66 -9.78%, #F55B46 107.04%)',
   borderRadius: 30,
   cursor: 'pointer',
   transition: 'transform 1s ease, opacity 0.4s ease',

@@ -17,6 +17,7 @@ import { getTeste } from '@/utils/get'
 import { CaretLeft, CaretRight } from 'phosphor-react'
 import * as S from './styles'
 import { TransactionMethods } from './components/TransactionMethods'
+import { Transactions2 } from './components/Transactions2'
 
 interface HomeProps {
   transactionsValues: {
@@ -99,7 +100,8 @@ const Home: NextPageWithLayout<HomeProps> = ({ transactionsValues, transactions,
           <LineChart transactions={filtered} weekDays={weekDays} />
         </S.GraphContainer>
         <S.LeftContainer>
-          <Transactions />
+          {/* <Transactions /> */}
+          <Transactions2 />
         </S.LeftContainer>
       </S.Container>
       <S.Container side="right">

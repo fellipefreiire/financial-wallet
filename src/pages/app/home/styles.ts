@@ -45,10 +45,12 @@ export const RightContainer = styled(SideContainers, {
 
 export const LeftContainer = styled(SideContainers, {
   flex: 2,
+  // maxHeight: '41vh'
 })
 
 export const GraphContainer = styled('div', {
-  flex: 3,
+  flex: 2,
+  // maxHeight: '41vh',
   display: 'flex',
   flexDirection: 'column'
 })

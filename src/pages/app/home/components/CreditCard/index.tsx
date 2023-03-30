@@ -26,10 +26,35 @@ export function CreditCard(props: CreditCardProps) {
 
   const dataGt = getDataValues(props.cardPosition)
   // console.log(a)
+  const cardFlag = 'mastercard'
+
+  function getCardFlag(cardFlag: string) {
+    switch (cardFlag) {
+      case 'mastercard': {
+        return '/mastercard_logo.svg'
+      }
+      case 'hipercard': {
+        return '/hipercard_logo.svg'
+      }
+      case 'elo': {
+        return '/elo_logo.svg'
+      }
+      case 'visa': {
+        return '/visa_logo.svg'
+      }
+      default: {
+        return ''
+      }
+    }
+  }
+
+  const src = getCardFlag(cardFlag)
+
   return (
     <S.CreditCardContainer onClick={props.onClick} data-position={props.cardPosition} data-position-gt={dataGt}>
       <div>
-        <Image src="/mastercard_logo.svg" width={80} height={80} alt="" />
+        {/* <Image src="/hipercard_logo.svg" width={80} height={80} alt="" /> */}
+        <Image src={src} width={80} height={80} alt="" />
       </div>
       <div>
         <span>**** **** **** {props.number}</span>
